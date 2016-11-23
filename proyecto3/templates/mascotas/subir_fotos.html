@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load compress %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+
+<div class="panel-body">
+
+  <form id="fileupload" method="post" action="{% url 'upload_nueva_mascota' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <span class="">
+          <input type="file" id="foto_mascota" name="foto_mascota">
+      </span>
+      <div class="help-message-block result-error">
+          <p>{% trans "Maximo archivos que no excedan los 8MB. (JPG or PNG)" %}</p>
+      </div>
+  </form>
+  <div id="upload_progress" class="progress">
+      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+          <span class="sr-only">0% Complete</span>
+      </div>
+  </div>
+  <div class="result"></div>
+  <button id="upload_button" class="btn  btn-xs"><i class="ti-upload"></i> {% trans "Subir foto de mascota" %}</button>
+
+<br><br><br><br>
+
+    {% if form.errors %}
+        <div class="alert alert-danger alert-with-icon" data-notify="container">
+            <div class="container">
+                <div class="alert-wrapper">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <i class="alert-icon ti-bell"></i>
+                    <div class="message">{% trans "The Form bellow has error, please verify it and try again." %}</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Client side validation messages -->
+    <div id="error-messages" class="alert alert-danger alert-with-icon" data-notify="container" style="display:none">
+        <div class="container">
+            <div class="alert-wrapper">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <i class="alert-icon ti-bell"></i>
+                <div class="message">{% trans "The Form bellow has error, please verify it and try again." %}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="division">
+            <div class="line l"></div>
+            <h4 class="text-center">{% trans "Cargar nueva mascota" %}</h4>
+            <div class="line r"></div>
+        </div>
+
+        <form id="nueva_mascota_form" class="" action="{% url 'crear_nueva_mascota' %}" method="post">
+          {% csrf_token %}
+
+          <!-- Nombre de dueno -->
+          <div class="form-group {% if form.nickname.errors %}has-error{% endif %}">
+            <label for="{{ form.nickname.id_for_label }}">{{ form.nickname.label_tag }}</label>
+            {{ form.nickname | add_class:"form-control" }}
+            {{ form.nickname.errors }}
+          </div>
+          <!-- ./Nombre de dueno -->
+
+          <!-- Nombre de dueno -->
+          <div class="form-group {% if form.nombre_mascota.errors %}has-error{% endif %}">
+            <label for="{{ form.nombre_mascota.id_for_label }}">{{ form.nombre_mascota.label_tag }}</label>
+            {{ form.nombre_mascota | add_class:"form-control" }}
+            {{ form.nombre_mascota.errors }}
+          </div>
+          <!-- ./Nombre de dueno -->
+
+        <div class="row btn-container text-center">
+          <div class="col-md-6 col-sm-12 col-xs-12">
+              <a
+                href="#"
+                class="btn btn-md btn-fill btn-info">
+                {% trans "Cancelar" %}
+              </a>
+          </div>
+          <div class="col-md-6 col-sm-12 col-xs-12">
+              <button
+                  type="submit"
+                  name="submit_button"
+                  class="btn btn-fill btn-md btn-success btn-move-right">
+                  {% trans "Guardar" %}
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+    {% compress js %}
+      <script src="{% static 'assets/js/jquery-1.10.2.min.js' %}" type="text/javascript"></script>
+      <script src="{% static 'assets/js/jquery-ui-1.10.4.custom.min.js' %}" type="text/javascript"></script>
+      <script src="{% static 'bootstrap3/js/bootstrap.min.js' %}" type="text/javascript"></script>
+      <script src="{% static 'jQuery-File-Upload-9.12.1/js/vendor/jquery.ui.widget.js' %}"></script>
+      <script src="{% static 'jQuery-File-Upload-9.12.1/js/jquery.iframe-transport.js' %}"></script>
+      <script src="{% static 'jQuery-File-Upload-9.12.1/js/jquery.fileupload.js' %}"></script>
+    {% endcompress %}
+{% endblock %}
